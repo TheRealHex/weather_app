@@ -35,6 +35,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: _buildUI(),
     );
   }
@@ -45,26 +46,29 @@ class _HomeState extends State<Home> {
         child: CircularProgressIndicator(color: Colors.blueAccent),
       );
     }
-    return SizedBox(
-      width: MediaQuery.sizeOf(context).width,
-      height: MediaQuery.sizeOf(context).height,
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _searchBar(),
-          SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
-          _locationHeader(),
-          SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-          _weatherIcon(),
-          SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
-          _currentTemp(),
-          SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
-          _dateTimeInfo(),
-          SizedBox(height: MediaQuery.sizeOf(context).height * 0.05),
-          _extraInfo(),
-        ],
+    return SingleChildScrollView(
+      child: SizedBox(
+        width: MediaQuery.sizeOf(context).width,
+        height: MediaQuery.sizeOf(context).height,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
+            _searchBar(),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
+            _locationHeader(),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+            _weatherIcon(),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
+            _currentTemp(),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.02),
+            _dateTimeInfo(),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
+            _extraInfo(),
+          ],
+        ),
       ),
     );
   }
@@ -74,12 +78,16 @@ class _HomeState extends State<Home> {
       width: MediaQuery.sizeOf(context).width * 0.80,
       child: TextField(
         controller: _searchController,
+        // search input
         onEditingComplete: () {
           setState(() {
             cityName = _searchController.text;
-            // print(cityName);
             _updateWeather();
           });
+        },
+        // hide keyboard if tapped outside the search bar
+        onTapOutside: (value) {
+          FocusScope.of(context).requestFocus(new FocusNode());
         },
         decoration: InputDecoration(
             focusedBorder: OutlineInputBorder(
