@@ -12,6 +12,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final WeatherFactory _wf = WeatherFactory(apiKey);
+  final TextEditingController _searchController = TextEditingController();
+  String cityName = 'Kathmandu';
 
   Weather? _weather;
 
@@ -19,7 +21,11 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     // fetch data and store to _weather
-    _wf.currentWeatherByCityName('Lamatar').then((w) {
+    _updateWeather();
+  }
+
+  void _updateWeather() {
+    _wf.currentWeatherByCityName(cityName).then((w) {
       setState(() {
         _weather = w;
       });
@@ -36,7 +42,7 @@ class _HomeState extends State<Home> {
   Widget _buildUI() {
     if (_weather == null) {
       return const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(color: Colors.blueAccent),
       );
     }
     return SizedBox(
@@ -47,8 +53,10 @@ class _HomeState extends State<Home> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          _searchBar(),
+          SizedBox(height: MediaQuery.sizeOf(context).height * 0.06),
           _locationHeader(),
-          SizedBox(height: MediaQuery.sizeOf(context).height * 0.04),
+          SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
           _weatherIcon(),
           SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
           _currentTemp(),
@@ -61,10 +69,43 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Widget _searchBar() {
+    return SizedBox(
+      width: MediaQuery.sizeOf(context).width * 0.80,
+      child: TextField(
+        controller: _searchController,
+        onEditingComplete: () {
+          setState(() {
+            cityName = _searchController.text;
+            // print(cityName);
+            _updateWeather();
+          });
+        },
+        decoration: InputDecoration(
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.blue, width: 2.0),
+              borderRadius: BorderRadius.circular(100),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide:
+                  const BorderSide(color: Colors.blueAccent, width: 1.3),
+              borderRadius: BorderRadius.circular(100),
+            ),
+            label: const Text(
+              'What city?',
+            ),
+            labelStyle: const TextStyle(
+                color: Colors.white70,
+                fontWeight: FontWeight.bold,
+                fontSize: 13)),
+      ),
+    );
+  }
+
   Widget _locationHeader() {
     return Text(
       _weather?.areaName ?? "",
-      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
     );
   }
 
@@ -83,11 +124,11 @@ class _HomeState extends State<Home> {
           children: [
             Text(
               DateFormat("EEEE,").format(now),
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
             ),
             Text(
               "  ${DateFormat("d/M/y").format(now)}",
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
             ),
           ],
         ),
@@ -100,7 +141,7 @@ class _HomeState extends State<Home> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          height: MediaQuery.sizeOf(context).height * 0.20,
+          height: MediaQuery.sizeOf(context).height * 0.17,
           decoration: BoxDecoration(
             image: DecorationImage(
                 image: NetworkImage(
@@ -127,7 +168,7 @@ class _HomeState extends State<Home> {
       height: MediaQuery.sizeOf(context).height * 0.15,
       width: MediaQuery.sizeOf(context).width * 0.80,
       decoration: BoxDecoration(
-        color: Colors.redAccent,
+        color: Colors.blueAccent,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
@@ -141,17 +182,11 @@ class _HomeState extends State<Home> {
             children: [
               Text(
                 "Max : ${_weather?.tempMax?.celsius?.toStringAsFixed(0)}°C",
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 14),
+                style: textWithShadow(),
               ),
               Text(
                 "Min : ${_weather?.tempMin?.celsius?.toStringAsFixed(0)}°C",
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 14),
+                style: textWithShadow(),
               ),
             ],
           ),
@@ -162,22 +197,22 @@ class _HomeState extends State<Home> {
             children: [
               Text(
                 "Wind : ${_weather?.windSpeed}m/s",
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 14),
+                style: textWithShadow(),
               ),
               Text(
                 "Humidity : ${_weather?.humidity?.toStringAsFixed(0)}%",
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 14),
+                style: textWithShadow(),
               ),
             ],
           )
         ],
       ),
     );
+  }
+
+  TextStyle textWithShadow() {
+    return const TextStyle(shadows: <Shadow>[
+      Shadow(color: Colors.black54, offset: Offset(3, 3), blurRadius: 3)
+    ], fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14);
   }
 }
