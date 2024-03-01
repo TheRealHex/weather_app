@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
 import 'package:weather_app/constants.dart';
-import 'package:weather_app/screens/more_info.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -216,7 +215,8 @@ class _HomeState extends State<Home> {
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.black54),
-            onPressed: () => Navigator.pushNamed(context, '/more'),
+            onPressed: () => Navigator.pushNamed(context, '/more',
+                arguments: {'weatherData': _weather}),
             child: Text('More'),
           ),
         ],
