@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
 import 'package:weather_app/constants.dart';
+import 'package:weather_app/screens/more_info.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -173,7 +174,7 @@ class _HomeState extends State<Home> {
 
   Widget _extraInfo() {
     return Container(
-      height: MediaQuery.sizeOf(context).height * 0.15,
+      height: MediaQuery.sizeOf(context).height * 0.20,
       width: MediaQuery.sizeOf(context).width * 0.80,
       decoration: BoxDecoration(
         color: Colors.blueAccent,
@@ -212,7 +213,12 @@ class _HomeState extends State<Home> {
                 style: textWithShadow(),
               ),
             ],
-          )
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.black54),
+            onPressed: () => Navigator.pushNamed(context, '/more'),
+            child: Text('More'),
+          ),
         ],
       ),
     );

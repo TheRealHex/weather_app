@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_app/screens/more_info.dart';
 
 import 'screens/home.dart';
 
@@ -17,7 +18,10 @@ class Main extends StatelessWidget {
       title: 'Weather App',
       theme: ThemeData.dark(),
       themeAnimationStyle: AnimationStyle.noAnimation,
-      home: const Home(),
+      routes: {
+        '/': (context) => Home(),
+        '/more': (context) => MoreInfo(),
+      },
     );
   }
 }
