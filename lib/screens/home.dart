@@ -217,7 +217,10 @@ class _HomeState extends State<Home> {
             style: ElevatedButton.styleFrom(backgroundColor: Colors.black54),
             onPressed: () => Navigator.pushNamed(context, '/more',
                 arguments: {'weatherData': _weather}),
-            child: Text('More'),
+            child: Text(
+              'More',
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
